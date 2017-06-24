@@ -3,8 +3,11 @@
 # http://www.r-bloggers.com/k-means-clustering-from-r-in-action/
 
 # Exercise 0: Install these packages if you don't have them already
+#install.packages(c("cluster", "rattle", "NbClust","flexclust"))
+library(cluster)
+library(rattle)
+library(NbClust)
 
-# install.packages(c("cluster", "rattle","NbClust"))
 
 # Now load the data and look at the first few rows
 data(wine, package="rattle")
@@ -12,6 +15,7 @@ head(wine)
 
 # Exercise 1: Remove the first column from the data and scale
 # it using the scale() function
+df <- scale(subset(wine, select = -c(1)))
 
 
 # Now we'd like to cluster the data using K-Means. 
@@ -51,13 +55,14 @@ barplot(table(nc$Best.n[1,]),
 
 
 # Exercise 3: How many clusters does this method suggest?
-
+# 3 clusters suggested
 
 # Exercise 4: Once you've picked the number of clusters, run k-means 
 # using this number of clusters. Output the result of calling kmeans()
 # into a variable fit.km
 
-# fit.km <- kmeans( ... )
+fit.km <- kmeans(df, 3)
+
 
 # Now we want to evaluate how well this clustering does.
 
@@ -65,9 +70,14 @@ barplot(table(nc$Best.n[1,]),
 # compares to the actual wine types in wine$Type. Would you consider this a good
 # clustering?
 
+library(flexclust)
+randIndex(table(wine$Type, fit.km$cluster))
+#yes good clustering
 
 # Exercise 6:
 # * Visualize these clusters using  function clusplot() from the cluster library
 # * Would you consider this a good clustering?
 
-#clusplot( ... )
+library(cluster)
+clusplot(df, fit.km$cluster) 
+# yes good clustering
